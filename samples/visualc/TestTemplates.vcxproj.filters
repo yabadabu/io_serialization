@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="Sample00.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\io\io.h" />
+    <ClInclude Include="..\..\io\io_binary.h" />
+    <ClInclude Include="..\..\io\io_imgui.h" />
+  </ItemGroup>
+</Project>
