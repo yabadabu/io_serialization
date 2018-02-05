@@ -42,12 +42,18 @@ namespace IO {
     struct io_has_member<false> {
       template<typename AR, typename T>
       static bool io_call(AR& ar, T &t, const char* name) {
-        return io_non_member(ar, t, name);
+        return io_impl(ar, t, name);
       }
     };
   }
-
 }
+
+//// https://jguegant.github.io/blogs/tech/sfinae-introduction.html
+template<bool B, class T = void> // Default template version.
+struct enable_if {};             // This struct doesn't define "type" and the substitution will fail if you try to access it.
+
+template<class T>                // A specialisation used if the expression is true. 
+struct enable_if<true, T> { typedef T type; }; // This struct do have a "type" and won't fail on access.
 
 // ----------------------------------------------------------------------------
 // By default, calls are forwarded to the member fn if exists or to the io_non_member

@@ -50,17 +50,22 @@ namespace IO {
     }
   };
 
+  // -------------------------------------------------
+  // if std::is_base_of<BinArchive,AR>::value && std::is_pod<T>::value == true
+  // then enable_if will return the second arg: bool, from the enable_if  we want 
+  // the type, so we add ::type, but we also need to add typename to avoid confusion
+  // with a static var for example
   template< typename AR, typename T >
-  bool io_non_member(AR& ar, T& t, const char* name) {
-    //if (std::is_pod<T>::value)
-    //  return ar.ioBytes(&t, sizeof(T), name);
-    printf("Missing io support for %s\n", name);
-    return false;
+  typename enable_if< std::is_base_of<BinArchive,AR>::value && std::is_pod<T>::value, bool >::type
+  io_impl(AR& ar, T& t, const char* name)
+  {
+    return ar.ioBytes(&t, sizeof(T), name);
   }
 
-  // Serialization of all vectors
+  // Serialization of all vectors for BinArchives
   template< typename AR, typename T >
-  bool io_non_member(AR& ar, std::vector<T>& v, const char* name) {
+  typename enable_if< std::is_base_of<BinArchive, AR>::value, bool >::type
+  io_impl(AR& ar, std::vector<T>& v, const char* name) {
 
     size_t sz = v.size();
     printf("At io_non_member of vector. Size:%zd\n", sz);
@@ -89,7 +94,8 @@ namespace IO {
   // --------------------------------------------------------------------
   // Save a string in general form: Save the size, then the bytes
   template< typename AR >
-  bool io_non_member(AR& ar, std::string& t, const char* name) {
+  typename enable_if< std::is_base_of<BinArchive, AR>::value, bool >::type
+  io_impl(AR& ar, std::string& t, const char* name) {
     size_t sz = t.size();
     if (ar.isReading())
       t.resize(sz);
