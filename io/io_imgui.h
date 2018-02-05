@@ -7,6 +7,9 @@ namespace IO {
 
   // -------------------------------------------------
   class IOImGUi {
+  public:
+    void beginObj(const char* name) {}
+    void endObj() {}
   };
 
   bool io_impl(IOImGUi& ar, int& t, const char* name) {

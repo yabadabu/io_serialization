@@ -17,6 +17,7 @@
     <ClInclude Include="..\..\io\io.h" />
     <ClInclude Include="..\..\io\io_binary.h" />
     <ClInclude Include="..\..\io\io_imgui.h" />
+    <ClInclude Include="..\..\io\io_json.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

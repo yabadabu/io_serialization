@@ -33,7 +33,10 @@ namespace IO {
     struct io_has_member<true> {
       template<typename AR, typename T>
       static bool io_call(AR& ar, T &t, const char* name) {
-        return t.io(ar, name);
+        ar.beginObj(name);
+        bool is_ok = t.io(ar, name);
+        ar.endObj();
+        return is_ok;
       }
     };
 
@@ -42,7 +45,8 @@ namespace IO {
     struct io_has_member<false> {
       template<typename AR, typename T>
       static bool io_call(AR& ar, T &t, const char* name) {
-        return io_impl(ar, t, name);
+        bool is_ok = io_impl(ar, t, name);
+        return is_ok;
       }
     };
   }
@@ -56,12 +60,16 @@ template<class T>                // A specialisation used if the expression is t
 struct enable_if<true, T> { typedef T type; }; // This struct do have a "type" and won't fail on access.
 
 // ----------------------------------------------------------------------------
-// By default, calls are forwarded to the member fn if exists or to the io_non_member
+// By default, calls are forwarded to the member fn if exists or to the io_impl
 template< typename AR, typename T >
 bool io(AR& ar, T& t, const char* name) {
-  return IO::detail::io_has_member<
+
+  bool is_ok = IO::detail::io_has_member<
     IO::detail::hasIO<AR, T>()
   >::io_call(ar, t, name);
+
+
+  return is_ok;
 }
 
 #endif

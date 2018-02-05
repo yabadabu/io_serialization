@@ -10,6 +10,8 @@ namespace IO {
   protected:
     FILE* f = nullptr;
   public:
+    void beginObj(const char* name) {}
+    void endObj() {}
     ~BinArchive() {
       if (f) {
         fclose(f);
